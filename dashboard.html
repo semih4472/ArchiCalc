@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArchiCalc AI - Desktop</title>
+    <link rel="icon" href="icon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #F2F4F8;
+            --bg-sidebar: #FFFFFF;
+            --bg-card: #FFFFFF;
+            --text-main: #111111;
+            --text-muted: #888888;
+            --accent-black: #272727;
+            --accent-light: #F7F7F7;
+            --border-light: #EFEFEF;
+            --menu-hover: #F9F9F9;
+            --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.04);
+            --radius-xl: 24px;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-md: 12px;
+        }
+
+        [data-theme="dark"] {
+            /* High Contrast Monochrome - Dark Gray Base */
+            --bg-body: #121212;
+            --bg-sidebar: #1C1C1C;
+            --bg-card: #1C1C1C;
+            --text-main: #FFFFFF;
+            --text-muted: #A0A0A0;
+            --accent-black: #FFFFFF;
+            --accent-light: #2A2A2A;
+            --border-light: #333333;
+            --menu-hover: #2A2A2A;
+            --shadow-card: none;
+        }
+
+        [data-theme="dark"] .logo-text h1 {
+            color: #F9FAFB;
+        }
+
+        [data-theme="dark"] .logo-icon {
+            background: white;
+        }
+
+        [data-theme="dark"] .btn-black {
+            background: #FFFFFF;
+            color: #000000;
+        }
+
+        [data-theme="dark"] .inp-field {
+            background: #2A2A2A;
+            color: white;
+            border: 1px solid #444;
+        }
+
+        [data-theme="dark"] .inp-field:focus {
+            border-color: #FFFFFF;
+        }
+
+        [data-theme="dark"] .tool-icon-box {
+            background: #2A2A2A;
+            color: white;
+            border: 1px solid #444;
+        }
+
+        [data-theme="dark"] .nav-item.active {
+            background: #FFFFFF;
+            color: #000000;
+        }
+
+        [data-theme="dark"] .result-banner {
+            background: #111;
+            border: 1px solid #333;
+            color: white;
+        }
+
+        [data-theme="dark"] .sidebar {
+            border-right: 1px solid #222;
+        }
+
+        [data-theme="dark"] .sidebar-footer {
+            border-top: 1px solid #222;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            height: 100vh;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border-light);
+            padding: 32px 24px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: var(--radius-md);
+            object-fit: contain;
+        }
+
+        .logo-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .logo-text span {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .nav-menu {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .nav-item:hover {
+            background-color: var(--menu-hover);
+            color: var(--text-main);
+        }
+
+        .nav-item.active {
+            background-color: var(--accent-black);
+            color: white;
+        }
+
+        .nav-icon {
+            font-size: 18px;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            border-top: 1px solid var(--border-light);
+            padding-top: 24px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 32px 48px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .page-title p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .user-action {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: white;
+            border: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            max-width: 1200px;
+        }
+
+        /* Shared Card Styles (from V2 Design) */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border-light);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        /* Plan Analysis Section */
+        .plan-visual {
+            background: #FAFAFA;
+            border: 1px solid #EEE;
+            border-radius: var(--radius-lg);
+            height: 240px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .plan-visual:hover {
+            background: #F5F5F5;
+        }
+
+        .upload-msg {
+            position: absolute;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .plan-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-box {
+            background: var(--accent-light);
+            padding: 16px;
+            border-radius: var(--radius-md);
+            text-align: center;
+        }
+
+        .stat-box .label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .stat-box .val {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .btn-black {
+            width: 100%;
+            background: var(--accent-black);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-black:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        /* Tools Grid (Right Panel) */
+        .tools-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .tool-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: var(--accent-light);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .tool-item:hover {
+            background: #EFEFEF;
+        }
+
+        .tool-icon-box {
+            width: 48px;
+            height: 48px;
+            background: white;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .tool-info h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .tool-info p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Views Logic */
+        .view-section {
+            display: none;
+            margin-top: 24px;
+        }
+
+        .view-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Calculator View Styles */
+        .calc-wrapper {
+            max-width: 600px;
+            background: white;
+            padding: 32px;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-card);
+        }
+
+        .calc-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .inp-group {
+            margin-bottom: 16px;
+        }
+
+        .inp-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .inp-field {
+            width: 100%;
+            padding: 16px;
+            background: #F7F7F7;
+            border: 1px solid transparent;
+            border-radius: var(--radius-md);
+            font-size: 16px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .inp-field:focus {
+            background: white;
+            border-color: var(--accent-black);
+        }
+
+        .result-banner {
+            margin-top: 32px;
+            background: var(--accent-black);
+            color: white;
+            padding: 24px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .res-large {
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .res-desc {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        /* Mobile Responsive Styles */
+        .mobile-menu-btn {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 12px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                grid-template-columns: 1fr;
+                height: auto;
+                overflow-y: visible;
+            }
+
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                z-index: 1000;
+                display: none;
+                border-right: none;
+            }
+
+            .sidebar.mobile-open {
+                display: flex;
+            }
+
+            .main-content {
+                padding: 20px 16px;
+                padding-top: 80px;
+                /* Space for fixed header if we had one, but header is in flow so simple padding is likely enough unless we fix the header. Let's keep it simple first. */
+            }
+
+            .header-bar {
+                margin-bottom: 24px;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .calc-row {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .plan-stats-grid {
+                gap: 8px;
+            }
+
+            .inp-field,
+            .btn-black,
+            .nav-item {
+                min-height: 48px;
+                /* Touch friendly */
+            }
+
+            /* Close button for sidebar */
+            .sidebar .logo-area {
+                justify-content: space-between;
+            }
+
+            .sidebar-close-btn {
+                display: block !important;
+            }
+        }
+
+        .sidebar-close-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-main);
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="logo-area" onclick="window.location.href='index.html'" style="cursor: pointer;">
+            <img src="icon.png" class="logo-icon" alt="AC">
+            <div class="logo-text">
+                <h1>ArchiCalc</h1>
+                <span>Pro v1.0</span>
+            </div>
+            <button class="sidebar-close-btn" onclick="toggleSidebar()">✕</button>
+        </div>
+
+        <nav class="nav-menu">
+            <!-- Navigation Items remain unchanged but needed for context if replacing larger blocks -->
+            <div class="nav-item active" onclick="switchView('dashboard', this); toggleSidebar()">
+                <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    xmlns="http://www.w3.org/2000/svg" style="min-width: 20px;">
+                    <rect x="3" y="11" width="4" height="10" rx="2" fill="currentColor" />
+                    <rect x="10" y="7" width="4" height="14" rx="2" fill="currentColor" />
+                    <rect x="17" y="3" width="4" height="18" rx="2" fill="currentColor" />
+                </svg> Dashboard
+            </div>
+            <div style="height: 12px;"></div>
+            <div
+                style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; padding: 0 16px; margin-bottom: 8px; letter-spacing: 0.5px;">
+                Calculators</div>
+            <div class="nav-item" onclick="switchView('calc-area', this); toggleSidebar()">
+                <span class="nav-icon">📐</span> Area
+            </div>
+            <div class="nav-item" onclick="switchView('calc-volume', this); toggleSidebar()">
+                <span class="nav-icon">🧊</span> Volume
+            </div>
+            <div class="nav-item" onclick="switchView('calc-perimeter', this); toggleSidebar()">
+                <span class="nav-icon">📏</span> Perimeter
+            </div>
+            <div class="nav-item" onclick="switchView('calc-slope', this); toggleSidebar()">
+                <span class="nav-icon">📈</span> Slope (%)
+            </div>
+            <div class="nav-item" onclick="switchView('calc-stairs', this); toggleSidebar()">
+                <span class="nav-icon">🪜</span> Stairs
+            </div>
+            <div class="nav-item" onclick="switchView('calc-level', this); toggleSidebar()">
+                <span class="nav-icon">🏗️</span> Elevation
+            </div>
+            <div class="nav-item" onclick="switchView('calc-scale', this); toggleSidebar()">
+                <span class="nav-icon">✏️</span> Scale
+            </div>
+            <div style="height: 12px;"></div>
+            <div class="nav-item" onclick="switchView('contact-view', this); toggleSidebar()">
+                <span class="nav-icon">📧</span> Contact
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span>&copy; 2026 ArchiCalc</span>
+                <button onclick="toggleTheme()"
+                    style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:16px;">🌙</button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="header-bar">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div class="mobile-menu-btn" onclick="toggleSidebar()">☰</div>
+                <div class="page-title">
+                    <h2 id="page-header">Dashboard</h2>
+                    <p>Welcome back, Architect.</p>
+                </div>
+            </div>
+            <div class="user-action">👤</div>
+        </header>
+
+        <!-- View: Dashboard -->
+        <div id="dashboard" class="view-section active">
+            <div class="dashboard-grid">
+                <!-- Left Col: History -->
+                <div style="display:flex; flex-direction:column; gap:24px;">
+
+
+                    <!-- History Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Recent Calculations</h3>
+                            <span style="font-size:12px; color:var(--text-muted); cursor:pointer;"
+                                onclick="clearHistory()">Clear</span>
+                        </div>
+                        <div id="history-list" style="display:flex; flex-direction:column; gap:12px;">
+                            <div style="text-align:center; color:var(--text-muted); font-size:13px; padding:20px;">No
+                                recent calculations</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Col: Quick Tools -->
+                <div class="card" style="background: transparent; box-shadow: none; border: none; padding: 0;">
+                    <h3 class="card-title" style="margin-bottom: 20px;">Quick Tools</h3>
+                    <div class="tools-list">
+                        <div class="tool-item" onclick="externalSwitch('calc-slope')">
+                            <div class="tool-icon-box">📈</div>
+                            <div class="tool-info">
+                                <h4>Slope %</h4>
+                                <p>Ramp & Roof Incline</p>
+                            </div>
+                        </div>
+                        <div class="tool-item" onclick="externalSwitch('calc-level')">
+                            <div class="tool-icon-box">🏗️</div>
+                            <div class="tool-info">
+                                <h4>Elevation</h4>
+                                <p>Level Diff</p>
+                            </div>
+                        </div>
+                        <div class="tool-item" onclick="externalSwitch('calc-stairs')">
+                            <div class="tool-icon-box">🪜</div>
+                            <div class="tool-info">
+                                <h4>Stairs Calc</h4>
+                                <p>Riser & Tread Check</p>
+                            </div>
+                        </div>
+                        <div class="tool-item" onclick="externalSwitch('calc-volume')">
+                            <div class="tool-icon-box">🧊</div>
+                            <div class="tool-info">
+                                <h4>Volume Calc</h4>
+                                <p>Cube, Cylinder</p>
+                            </div>
+                        </div>
+                        <div class="tool-item" onclick="externalSwitch('calc-area')">
+                            <div class="tool-icon-box">📐</div>
+                            <div class="tool-info">
+                                <h4>Area Calc</h4>
+                                <p>Rect, Circle, Triangle</p>
+                            </div>
+                        </div>
+                        <div class="tool-item" onclick="externalSwitch('calc-perimeter')">
+                            <div class="tool-icon-box">📏</div>
+                            <div class="tool-info">
+                                <h4>Perimeter</h4>
+                                <p>Boundary Length</p>
+                            </div>
+                        </div>
+                        <div class="tool-item" onclick="externalSwitch('calc-scale')">
+                            <div class="tool-icon-box">✏️</div>
+                            <div class="tool-info">
+                                <h4>Scale Calc</h4>
+                                <p>Real vs Scaled</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- View: Area Calculator -->
+        <div id="calc-area" class="view-section">
+            <div class="calc-wrapper">
+                <div class="inp-group">
+                    <label>Select Shape</label>
+                    <select class="inp-field" id="area-shape" onchange="updateAreaInputs(this.value)">
+                        <option value="rectangle">Rectangle</option>
+                        <option value="circle">Circle</option>
+                        <option value="triangle">Triangle</option>
+                    </select>
+                </div>
+                <div id="area-inputs-dyn">
+                    <!-- Dynamic -->
+                    <div class="calc-row">
+                        <div class="inp-group"><label>Width (m)</label><input type="number" class="inp-field"
+                                id="area-w"></div>
+                        <div class="inp-group"><label>Height (m)</label><input type="number" class="inp-field"
+                                id="area-h"></div>
+                    </div>
+                </div>
+                <button class="btn-black" onclick="calculate('area')">Calculate Area</button>
+
+                <div class="result-banner" id="res-area" style="display:none;">
+                    <div>
+                        <div class="res-desc">Calculated Area</div>
+                        <div class="res-large"><span id="val-area">0</span> <small style="font-size:16px">m²</small>
+                        </div>
+                    </div>
+                    <div style="font-size: 32px;">📐</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- View: Stairs Calculator -->
+        <div id="calc-stairs" class="view-section">
+            <div class="calc-wrapper">
+                <div class="calc-row">
+                    <div class="inp-group">
+                        <label>Total Floor Height (cm)</label>
+                        <input type="number" class="inp-field" id="stair-h" placeholder="300">
+                    </div>
+                    <div class="inp-group">
+                        <label>Target Riser (cm)</label>
+                        <input type="number" class="inp-field" id="stair-r" value="17.5">
+                    </div>
+                </div>
+                <button class="btn-black" onclick="calculate('stairs')">Calculate Steps</button>
+
+                <div class="result-banner" id="res-stairs" style="display:none;">
+                    <div>
+                        <div class="res-desc">Result</div>
+                        <div class="res-large"><span id="val-steps">0</span> <small style="font-size:16px">steps</small>
+                        </div>
+                        <div style="font-size:13px; opacity:0.8; margin-top:4px;">Riser Height: <span
+                                id="val-riser">0</span> cm</div>
+                    </div>
+                    <div style="font-size: 32px;">🪜</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- View: Perimeter Calculator -->
+        <div id="calc-perimeter" class="view-section">
+            <div class="calc-wrapper">
+                <div class="inp-group">
+                    <label>Select Shape</label>
+                    <select class="inp-field" id="peri-shape" onchange="updatePeriInputs(this.value)">
+                        <option value="rectangle">Rectangle</option>
+                        <option value="circle">Circle</option>
+                        <option value="triangle">Triangle</option>
+                    </select>
+                </div>
+                <div id="peri-inputs-dyn">
+                    <div class="calc-row">
+                        <div class="inp-group"><label>Width (m)</label><input type="number" class="inp-field"
+                                id="peri-w"></div>
+                        <div class="inp-group"><label>Height (m)</label><input type="number" class="inp-field"
+                                id="peri-h"></div>
+                    </div>
+                </div>
+                <button class="btn-black" onclick="calculate('perimeter')">Calculate Perimeter</button>
+
+                <div class="result-banner" id="res-peri" style="display:none;">
+                    <div>
+                        <div class="res-desc">Total Perimeter</div>
+                        <div class="res-large"><span id="val-peri">0</span> <small style="font-size:16px">m</small>
+                        </div>
+                    </div>
+                    <div style="font-size: 32px;">📏</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- View: Slope Calculator -->
+        <div id="calc-slope" class="view-section">
+            <div class="calc-wrapper">
+                <div class="calc-row">
+                    <div class="inp-group">
+                        <label>Vertical Rise (h)</label>
+                        <input type="number" class="inp-field" id="slope-h" placeholder="cm/m">
+                    </div>
+                    <div class="inp-group">
+                        <label>Horizontal Run (L)</label>
+                        <input type="number" class="inp-field" id="slope-l" placeholder="cm/m">
+                    </div>
+                </div>
+                <button class="btn-black" onclick="calculate('slope')">Calculate Slope %</button>
+
+                <div class="result-banner" id="res-slope" style="display:none;">
+                    <div>
+                        <div class="res-desc">Gradient Percentage</div>
+                        <div class="res-large"><span id="val-slope">0</span> <small style="font-size:16px">%</small>
+                        </div>
+                    </div>
+                    <div style="font-size: 32px;">📈</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- View: Elevation (Kot) Calculator -->
+        <div id="calc-level" class="view-section">
+            <div class="calc-wrapper">
+                <div class="calc-row">
+                    <div class="inp-group">
+                        <label>Point A Elevation (m)</label>
+                        <input type="number" class="inp-field" id="level-a" placeholder="+0.00">
+                    </div>
+                    <div class="inp-group">
+                        <label>Point B Elevation (m)</label>
+                        <input type="number" class="inp-field" id="level-b" placeholder="-0.15">
+                    </div>
+                </div>
+                <button class="btn-black" onclick="calculate('level')">Calculate Difference</button>
+
+                <div class="result-banner" id="res-level" style="display:none;">
+                    <div>
+                        <div class="res-desc">Elevation Difference</div>
+                        <div class="res-large"><span id="val-level">0</span> <small style="font-size:16px">m</small>
+                        </div>
+                    </div>
+                    <div style="font-size: 32px;">🏗️</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- View: Volume Calculator -->
+        <div id="calc-volume" class="view-section">
+            <div class="calc-wrapper">
+                <div class="inp-group">
+                    <label>Select Shape</label>
+                    <select class="inp-field" id="vol-shape" onchange="updateVolInputs(this.value)">
+                        <option value="cube">Cube / Box</option>
+                        <option value="cylinder">Cylinder</option>
+                    </select>
+                </div>
+                <div id="vol-inputs-dyn">
+                    <div class="calc-row">
+                        <div class="inp-group"><label>Width (m)</label><input type="number" class="inp-field"
+                                id="vol-w"></div>
+                        <div class="inp-group"><label>Length (m)</label><input type="number" class="inp-field"
+                                id="vol-l"></div>
+                    </div>
+                    <div class="inp-group"><label>Height (m)</label><input type="number" class="inp-field" id="vol-h">
+                    </div>
+                </div>
+                <button class="btn-black" onclick="calculate('volume')">Calculate Volume</button>
+
+                <div class="result-banner" id="res-vol" style="display:none;">
+                    <div>
+                        <div class="res-desc">Calculated Volume</div>
+                        <div class="res-large"><span id="val-vol">0</span> <small style="font-size:16px">m³</small>
+                        </div>
+                    </div>
+                    <div style="font-size: 32px;">🧊</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- View: Scale Calculator -->
+        <div id="calc-scale" class="view-section">
+            <div class="calc-wrapper">
+                <div class="inp-group">
+                    <label>Calculation Mode</label>
+                    <select class="inp-field" id="scale-mode" onchange="updateScaleInputs(this.value)">
+                        <option value="real_to_scaled">Real &rarr; Scaled</option>
+                        <option value="scaled_to_real">Scaled &rarr; Real</option>
+                        <option value="find_scale">Find Scale</option>
+                    </select>
+                </div>
+                <!-- Default inputs for first mode -->
+                <div id="scale-inputs-dyn">
+                    <div class="calc-row">
+                        <div class="inp-group">
+                            <label>Real Length (m)</label>
+                            <input type="number" class="inp-field" id="scale-real" placeholder="e.g. 5">
+                        </div>
+                        <div class="inp-group">
+                            <label>Scale (1:x)</label>
+                            <input type="number" class="inp-field" id="scale-ratio" placeholder="e.g. 50" value="50">
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-black" onclick="calculate('scale')">Calculate</button>
+
+                <div class="result-banner" id="res-scale" style="display:none;">
+                    <div>
+                        <div class="res-desc">Result</div>
+                        <div class="res-large"><span id="val-scale">0</span> <small id="unit-scale"
+                                style="font-size:16px"></small></div>
+                    </div>
+                    <div style="font-size: 32px;">✏️</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- View: Contact -->
+        <div id="contact-view" class="view-section">
+            <div class="calc-wrapper">
+                <div class="inp-group">
+                    <label>Full Name</label>
+                    <input type="text" class="inp-field" id="contact-name" placeholder="John Doe">
+                </div>
+                <div class="inp-group">
+                    <label>Email Address</label>
+                    <input type="email" class="inp-field" id="contact-email" placeholder="john@example.com">
+                </div>
+                <div class="inp-group">
+                    <label>Message</label>
+                    <textarea class="inp-field" id="contact-msg" rows="5" placeholder="Your message here..."
+                        style="resize:vertical; min-height:100px; font-family:inherit;"></textarea>
+                </div>
+                <button class="btn-black" onclick="sendContact()">Send Message</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Firebase Compat Libraries -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <!-- App Scripts -->
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+
+    <script>
+        // import removed
+
+        // Protect this page - redirect if not logged in
+        document.addEventListener('DOMContentLoaded', () => {
+            // Protect this page - redirect if not logged in
+            initAuthGuard(true);
+
+            // Listen for user to load history
+            firebase.auth().onAuthStateChanged((user) => {
+                if (user) {
+                    loadHistory(user.uid);
+                }
+            });
+        });
+
+        // --- History Logic ---
+        let calcHistory = [];
+        let currentUserId = null;
+
+
+        function logHistory(tool, result) {
+            const time = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            const entry = { tool, result, time, timestamp: Date.now() }; // Added timestamp for sorting if needed
+
+            // Optimistic UI update
+            calcHistory.unshift(entry); // Add to top
+            if (calcHistory.length > 20) calcHistory.pop(); // Keep last 20 locally
+            renderHistory();
+
+            // Save to Firestore if logged in
+            const user = firebase.auth().currentUser;
+            if (user) {
+                console.log("Saving to Firestore for user:", user.uid);
+                if (!window.db) {
+                    console.error("Firestore DB is not initialized!");
+                    return;
+                }
+                const userRef = window.db.collection('users').doc(user.uid);
+                // Use arrayUnion to add entry. 
+                userRef.set({
+                    history: firebase.firestore.FieldValue.arrayUnion(entry)
+                }, { merge: true })
+                    .then(() => console.log("History saved successfully!"))
+                    .catch(err => {
+                        console.error("Error saving history:", err);
+                        alert("Error saving history: " + err.message);
+                    });
+            } else {
+                console.log("User not logged in, saving locally only.");
+            }
+        }
+
+        function loadHistory(uid) {
+            currentUserId = uid;
+            const userRef = db.collection('users').doc(uid);
+
+            // Real-time listener
+            userRef.onSnapshot((doc) => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    console.log("History loaded:", data.history);
+                    if (data.history && Array.isArray(data.history)) {
+                        // Sort by timestamp descending (newest first)
+                        calcHistory = data.history.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0)).slice(0, 20);
+                        renderHistory();
+                    }
+                } else {
+                    console.log("No history document found for user.");
+                }
+            }, (error) => {
+                console.error("Error loading history:", error);
+                alert("Error loading history: " + error.message);
+            });
+        }
+
+        function renderHistory() {
+            const listEl = document.getElementById('history-list');
+            if (calcHistory.length === 0) {
+                listEl.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:13px; padding:20px;">No recent calculations</div>';
+                return;
+            }
+
+            listEl.innerHTML = calcHistory.map(item => `
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; background:#F9F9F9; border-radius:8px; margin-bottom: 8px;">
+                    <div>
+                        <div style="font-weight:600; font-size:14px;">${item.tool}</div>
+                        <div style="font-size:12px; color:var(--text-muted);">${item.time}</div>
+                    </div>
+                    <div style="font-weight:700; font-size:14px;">${item.result}</div>
+                </div>
+            `).join('');
+        }
+
+        function clearHistory() {
+            // Confirm clear
+            if (!confirm("Are you sure you want to clear your history?")) return;
+
+            calcHistory = [];
+            renderHistory();
+
+            // Clear in Firestore
+            const user = firebase.auth().currentUser;
+            if (user) {
+                db.collection('users').doc(user.uid).update({
+                    history: []
+                }).catch(err => console.error("Error clearing history:", err));
+            }
+        }
+
+        // --- Navigation Logic ---
+        function switchView(viewId, navEl) {
+            // Update Nav
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            if (navEl) navEl.classList.add('active');
+
+            // Reset Inputs & Results of current views
+            document.querySelectorAll('input').forEach(inp => inp.value = '');
+            // Restore default stair target riser if cleared (optional but good UX)
+            if (document.getElementById('stair-r')) document.getElementById('stair-r').value = '17.5';
+
+            document.querySelectorAll('.result-banner').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.result-large span').forEach(el => el.innerText = '0');
+
+            // Update View
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+
+            // Update Header
+            const titleMap = {
+                'dashboard': 'Dashboard',
+                'calc-area': 'Area Calculator',
+                'calc-stairs': 'Stair Calculator',
+                'calc-perimeter': 'Perimeter Calculator',
+                'calc-slope': 'Slope Calculator',
+                'calc-level': 'Elevation Difference',
+                'calc-scale': 'Scale Calculator',
+                'calc-volume': 'Volume Calculator',
+                'contact-view': 'Contact Support'
+            };
+            document.getElementById('page-header').innerText = titleMap[viewId] || 'ArchiCalc';
+        }
+
+        function externalSwitch(viewId) {
+            // Find corresponding nav item
+            const navs = document.querySelectorAll('.nav-item');
+            let targetNav = null;
+            if (viewId === 'calc-area') targetNav = navs[1];
+            if (viewId === 'calc-volume') targetNav = navs[2]; // New Index
+            if (viewId === 'calc-perimeter') targetNav = navs[3]; // New Index
+            if (viewId === 'calc-slope') targetNav = navs[4];
+            if (viewId === 'calc-stairs') targetNav = navs[5]; // New Index
+            if (viewId === 'calc-level') targetNav = navs[6]; // New Index
+            if (viewId === 'calc-scale') targetNav = navs[7];
+
+            switchView(viewId, targetNav);
+        }
+
+        function sendContact() {
+            const name = document.getElementById('contact-name').value;
+            const email = document.getElementById('contact-email').value;
+            const msg = document.getElementById('contact-msg').value;
+
+            if (!name || !email || !msg) {
+                alert('Please fill in all fields.');
+                return;
+            }
+
+            const subject = encodeURIComponent('ArchiCalc Message from ' + name);
+            const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${msg}`);
+            const mailtoLink = `mailto:furkankaradogan42@gmail.com?subject=${subject}&body=${body}`;
+
+            window.location.href = mailtoLink;
+        }
+
+        // --- Calculator Logic ---
+        const Calculators = {
+            area: {
+                rectangle: (w, h) => w * h,
+                circle: (r) => Math.PI * r * r,
+                triangle: (b, h) => 0.5 * b * h
+            },
+            stairs: {
+                calculate: (h, r) => {
+                    const steps = Math.round(h / r);
+                    return { steps, actualRiser: (h / steps).toFixed(2) };
+                }
+            },
+            perimeter: {
+                rectangle: (w, h) => 2 * (Number(w) + Number(h)),
+                circle: (r) => 2 * Math.PI * r,
+                triangle: (a, b, c) => Number(a) + Number(b) + Number(c)
+            },
+            slope: {
+                // Rise / Run * 100
+                calculate: (h, l) => (h / l) * 100
+            },
+            scale: {
+                realToScaled: (realM, ratio) => (realM * 100) / ratio, // m to cm
+                scaledToReal: (scaledCm, ratio) => (scaledCm * ratio) / 100, // cm to m
+                findScale: (realM, scaledCm) => (realM * 100) / scaledCm
+            },
+            level: {
+                // A - B
+                calculate: (a, b) => (Number(a) - Number(b))
+            },
+            volume: {
+                cube: (w, l, h) => w * l * h,
+                cylinder: (r, h) => Math.PI * r * r * h
+            }
+        };
+
+        window.updateVolInputs = (shape) => {
+            const div = document.getElementById('vol-inputs-dyn');
+            if (shape === 'cube') div.innerHTML = `<div class="calc-row"><div class="inp-group"><label>Width (m)</label><input type="number" class="inp-field" id="vol-w"></div><div class="inp-group"><label>Length (m)</label><input type="number" class="inp-field" id="vol-l"></div></div><div class="inp-group"><label>Height (m)</label><input type="number" class="inp-field" id="vol-h"></div>`;
+            if (shape === 'cylinder') div.innerHTML = `<div class="calc-row"><div class="inp-group"><label>Radius (m)</label><input type="number" class="inp-field" id="vol-r"></div><div class="inp-group"><label>Height (m)</label><input type="number" class="inp-field" id="vol-h"></div></div>`;
+        };
+
+        window.updateScaleInputs = (mode) => {
+            const div = document.getElementById('scale-inputs-dyn');
+            if (mode === 'real_to_scaled') {
+                div.innerHTML = `
+                    <div class="calc-row">
+                        <div class="inp-group"><label>Real Length (m)</label><input type="number" class="inp-field" id="scale-real" placeholder="e.g. 5"></div>
+                        <div class="inp-group"><label>Scale (1:x)</label><input type="number" class="inp-field" id="scale-ratio" placeholder="e.g. 50" value="50"></div>
+                    </div>`;
+            } else if (mode === 'scaled_to_real') {
+                div.innerHTML = `
+                    <div class="calc-row">
+                        <div class="inp-group"><label>Scaled Length (cm)</label><input type="number" class="inp-field" id="scale-scaled" placeholder="e.g. 10"></div>
+                        <div class="inp-group"><label>Scale (1:x)</label><input type="number" class="inp-field" id="scale-ratio" placeholder="e.g. 50" value="50"></div>
+                    </div>`;
+            } else if (mode === 'find_scale') {
+                div.innerHTML = `
+                    <div class="calc-row">
+                        <div class="inp-group"><label>Real Length (m)</label><input type="number" class="inp-field" id="scale-real" placeholder="e.g. 5"></div>
+                        <div class="inp-group"><label>Scaled Length (cm)</label><input type="number" class="inp-field" id="scale-scaled" placeholder="e.g. 10"></div>
+                    </div>`;
+            }
+        };
+
+        window.updateAreaInputs = (shape) => {
+            const div = document.getElementById('area-inputs-dyn');
+            if (shape === 'rectangle') div.innerHTML = `<div class="calc-row"><div class="inp-group"><label>Width</label><input type="number" class="inp-field" id="area-w"></div><div class="inp-group"><label>Height</label><input type="number" class="inp-field" id="area-h"></div></div>`;
+            if (shape === 'circle') div.innerHTML = `<div class="inp-group"><label>Radius</label><input type="number" class="inp-field" id="area-r"></div>`;
+            if (shape === 'triangle') div.innerHTML = `<div class="calc-row"><div class="inp-group"><label>Base</label><input type="number" class="inp-field" id="area-b"></div><div class="inp-group"><label>Height</label><input type="number" class="inp-field" id="area-h"></div></div>`;
+        };
+
+        window.updatePeriInputs = (shape) => {
+            const div = document.getElementById('peri-inputs-dyn');
+            if (shape === 'rectangle') div.innerHTML = `<div class="calc-row"><div class="inp-group"><label>Width</label><input type="number" class="inp-field" id="peri-w"></div><div class="inp-group"><label>Height</label><input type="number" class="inp-field" id="peri-h"></div></div>`;
+            if (shape === 'circle') div.innerHTML = `<div class="inp-group"><label>Radius</label><input type="number" class="inp-field" id="peri-r"></div>`;
+            if (shape === 'triangle') div.innerHTML = `<div class="calc-row"><div class="inp-group"><label>Side A (m)</label><input type="number" class="inp-field" id="peri-a"></div><div class="inp-group"><label>Side B (m)</label><input type="number" class="inp-field" id="peri-b"></div></div><div class="inp-group"><label>Side C (m)</label><input type="number" class="inp-field" id="peri-c"></div>`;
+        };
+
+        window.calculate = (type) => {
+            if (type === 'area') {
+                const shape = document.getElementById('area-shape').value;
+                let val = 0;
+                if (shape === 'rectangle') val = Calculators.area.rectangle(document.getElementById('area-w').value, document.getElementById('area-h').value);
+                if (shape === 'circle') val = Calculators.area.circle(document.getElementById('area-r').value);
+                if (shape === 'triangle') val = Calculators.area.triangle(document.getElementById('area-b').value, document.getElementById('area-h').value);
+
+                val = val.toFixed(2);
+                document.getElementById('val-area').innerText = val;
+                document.getElementById('res-area').style.display = 'flex';
+                logHistory('Area', val + ' m²');
+            }
+            if (type === 'stairs') {
+                const res = Calculators.stairs.calculate(document.getElementById('stair-h').value, document.getElementById('stair-r').value);
+                document.getElementById('val-steps').innerText = res.steps;
+                document.getElementById('val-riser').innerText = res.actualRiser;
+                document.getElementById('res-stairs').style.display = 'flex';
+                logHistory('Stairs', `${res.steps} steps (${res.actualRiser}cm)`);
+            }
+            if (type === 'perimeter') {
+                const shape = document.getElementById('peri-shape').value;
+                let val = 0;
+                if (shape === 'rectangle') val = Calculators.perimeter.rectangle(document.getElementById('peri-w').value, document.getElementById('peri-h').value);
+                if (shape === 'circle') val = Calculators.perimeter.circle(document.getElementById('peri-r').value);
+                if (shape === 'triangle') val = Calculators.perimeter.triangle(document.getElementById('peri-a').value, document.getElementById('peri-b').value, document.getElementById('peri-c').value);
+
+                val = val.toFixed(2);
+                document.getElementById('val-peri').innerText = val;
+                document.getElementById('res-peri').style.display = 'flex';
+                logHistory('Perimeter', val + ' m');
+            }
+            if (type === 'slope') {
+                const val = Calculators.slope.calculate(document.getElementById('slope-h').value, document.getElementById('slope-l').value).toFixed(2);
+                document.getElementById('val-slope').innerText = val;
+                document.getElementById('res-slope').style.display = 'flex';
+                logHistory('Slope', val + '%');
+            }
+            if (type === 'level') {
+                const val = Calculators.level.calculate(document.getElementById('level-a').value, document.getElementById('level-b').value).toFixed(2);
+                document.getElementById('val-level').innerText = val;
+                document.getElementById('res-level').style.display = 'flex';
+                logHistory('Level Diff', val + ' m');
+            }
+            if (type === 'volume') {
+                const shape = document.getElementById('vol-shape').value;
+                let val = 0;
+                if (shape === 'cube') val = Calculators.volume.cube(document.getElementById('vol-w').value, document.getElementById('vol-l').value, document.getElementById('vol-h').value);
+                if (shape === 'cylinder') val = Calculators.volume.cylinder(document.getElementById('vol-r').value, document.getElementById('vol-h').value);
+
+                val = val.toFixed(2);
+                document.getElementById('val-vol').innerText = val;
+                document.getElementById('res-vol').style.display = 'flex';
+                logHistory('Volume', val + ' m³');
+            }
+            if (type === 'scale') {
+                const mode = document.getElementById('scale-mode').value;
+                const ratioInput = document.getElementById('scale-ratio');
+                const realInput = document.getElementById('scale-real');
+                const scaledInput = document.getElementById('scale-scaled');
+
+                let val = 0;
+                let unit = '';
+                let resultText = '';
+
+                if (mode === 'real_to_scaled') {
+                    if (!realInput.value || !ratioInput.value) return;
+                    val = Calculators.scale.realToScaled(realInput.value, ratioInput.value);
+                    unit = 'cm';
+                    resultText = val.toFixed(2);
+                } else if (mode === 'scaled_to_real') {
+                    if (!scaledInput.value || !ratioInput.value) return;
+                    val = Calculators.scale.scaledToReal(scaledInput.value, ratioInput.value);
+                    unit = 'm';
+                    resultText = val.toFixed(2);
+                } else if (mode === 'find_scale') {
+                    if (!realInput.value || !scaledInput.value) return;
+                    val = Calculators.scale.findScale(realInput.value, scaledInput.value);
+                    unit = '';
+                    resultText = '1:' + Math.round(val);
+                }
+
+                document.getElementById('val-scale').innerText = resultText;
+                document.getElementById('unit-scale').innerText = unit;
+                document.getElementById('res-scale').style.display = 'flex';
+                logHistory('Scale', resultText + ' ' + unit);
+            }
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('mobile-open');
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const current = body.getAttribute('data-theme');
+            if (current === 'dark') {
+                body.removeAttribute('data-theme');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+            }
+        }
+    </script>
+
+</body>
+
+</html>

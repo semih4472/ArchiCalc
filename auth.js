@@ -32,7 +32,7 @@ function initAuthGuard(options = {}) {
             // If we are on login or register page, go to dashboard
             if (redirectIfLoggedIn) {
                 if (window.location.pathname.includes('login.html') || window.location.pathname.includes('register.html')) {
-                    window.location.href = 'index.html';
+                    window.location.href = 'dashboard.html';
                 }
             }
 
@@ -43,10 +43,10 @@ function initAuthGuard(options = {}) {
             const heroBtn = document.getElementById('hero-cta-btn');
 
             if (navBtn) {
-                navBtn.href = "index.html";
+                navBtn.href = "dashboard.html";
                 navBtn.innerText = "Dashboard";
             }
-            if (heroBtn) heroBtn.href = "index.html";
+            if (heroBtn) heroBtn.href = "dashboard.html";
 
             // 2. Dashboard User Action Button
             const userActionBtn = document.querySelector('.user-action');
@@ -55,7 +55,7 @@ function initAuthGuard(options = {}) {
                 userActionBtn.onclick = async () => {
                     try {
                         await logoutUser();
-                        window.location.href = 'landing.html';
+                        window.location.href = 'index.html';
                     } catch (error) {
                         console.error("Logout failed", error);
                     }
@@ -81,7 +81,7 @@ function initAuthGuard(options = {}) {
             console.log("User is signed out");
 
             // 1. Handle Dashboard protection
-            if (redirectIfLoggedOut && !window.location.pathname.includes('login.html') && !window.location.pathname.includes('register.html') && !window.location.pathname.includes('landing.html')) {
+            if (redirectIfLoggedOut && !window.location.pathname.includes('login.html') && !window.location.pathname.includes('register.html') && !window.location.pathname.includes('index.html')) {
                 window.location.href = 'login.html';
             }
 
