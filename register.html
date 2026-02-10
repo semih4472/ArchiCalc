@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArchiCalc - Register</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F2F4F8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .auth-card {
+            background: white;
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .logo-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        h2 {
+            margin-bottom: 8px;
+            font-size: 24px;
+            color: #111;
+        }
+
+        p {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 32px;
+        }
+
+        .inp-group {
+            text-align: left;
+            margin-bottom: 16px;
+        }
+
+        .inp-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        .inp-field {
+            width: 100%;
+            padding: 14px;
+            background: #F7F7F7;
+            border: 1px solid #EFEFEF;
+            border-radius: 12px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.2s;
+            box-sizing: border-box;
+        }
+
+        .inp-field:focus {
+            background: white;
+            border-color: #272727;
+        }
+
+        .btn-black {
+            width: 100%;
+            background: #272727;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 16px;
+        }
+
+        .btn-black:hover {
+            opacity: 0.9;
+        }
+
+        .btn-google {
+            width: 100%;
+            background: white;
+            color: #111;
+            border: 1px solid #EFEFEF;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .btn-google:hover {
+            background-color: #FAFAFA;
+            border-color: #DDD;
+        }
+
+        .footer-link {
+            display: block;
+            margin-top: 24px;
+            font-size: 13px;
+            color: #888;
+            text-decoration: none;
+        }
+
+        .footer-link span {
+            color: #272727;
+            font-weight: 600;
+        }
+
+        .error-msg {
+            color: red;
+            font-size: 13px;
+            margin-top: 12px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="auth-card">
+        <img src="icon.png" class="logo-icon" alt="AC">
+        <h2>Create Account</h2>
+        <p>Join ArchiCalc for precision tools.</p>
+
+        <form id="register-form">
+            <div class="inp-group">
+                <label>Email Address</label>
+                <input type="email" id="email" class="inp-field" placeholder="john@example.com" required>
+            </div>
+            <div class="inp-group">
+                <label>Password</label>
+                <input type="password" id="password" class="inp-field" placeholder="••••••••" required>
+            </div>
+            <div class="inp-group">
+                <label>Confirm Password</label>
+                <input type="password" id="confirm-password" class="inp-field" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn-black">Sign Up</button>
+            <div class="error-msg" id="error-msg"></div>
+            <div class="success-msg" id="success-msg"
+                style="color: green; font-size: 14px; margin-top: 12px; display: none; font-weight: 500;"></div>
+        </form>
+
+        <a href="login.html" class="footer-link">Already have an account? <span>Sign In</span></a>
+        <a href="landing.html" class="footer-link" style="margin-top: 12px;">Back to Home</a>
+    </div>
+
+    <!-- Firebase Compat Libraries -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+    <!-- App Scripts -->
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check auth state
+            initAuthGuard({ redirectIfLoggedOut: false, redirectIfLoggedIn: false });
+
+            const form = document.getElementById('register-form');
+            if (form) {
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById('email').value;
+                    const password = document.getElementById('password').value;
+                    const confirmPassword = document.getElementById('confirm-password').value;
+                    const errorEl = document.getElementById('error-msg');
+                    const successEl = document.getElementById('success-msg');
+                    const btn = document.querySelector('.btn-black');
+
+                    // Reset messages
+                    errorEl.style.display = 'none';
+                    successEl.style.display = 'none';
+
+                    if (password !== confirmPassword) {
+                        errorEl.innerText = "Passwords do not match";
+                        errorEl.style.display = 'block';
+                        return;
+                    }
+
+                    try {
+                        btn.innerText = 'Creating Account...';
+                        btn.disabled = true;
+                        await registerUser(email, password);
+
+                        // Success!
+                        successEl.innerText = "Account created successfully! Redirecting...";
+                        successEl.style.display = 'block';
+
+                        // Redirect after 1.5 seconds
+                        setTimeout(() => {
+                            window.location.href = 'index.html';
+                        }, 1500);
+
+                    } catch (error) {
+                        console.error(error);
+                        let msg = error.message;
+                        if (error.code === 'auth/email-already-in-use') msg = "This email is already registered.";
+                        else if (error.code === 'auth/invalid-email') msg = "Invalid email address.";
+                        else if (error.code === 'auth/weak-password') msg = "Password should be at least 6 characters.";
+                        else if (error.code === 'auth/network-request-failed') msg = "Network error. Please check your connection.";
+                        else if (error.code) msg = error.message.replace('Firebase: ', '');
+
+                        errorEl.innerText = msg;
+                        errorEl.style.display = 'block';
+                        btn.innerText = 'Sign Up';
+                        btn.disabled = false;
+                    }
+                });
+            }
+        });
+
+        async function handleGoogleLogin() {
+            const errorEl = document.getElementById('error-msg');
+
+            try {
+                await loginWithGoogle();
+                // Redirect handled by auth guard logic (or updated logic below)
+                // Note: Auth guard in register page is set to display:none for redirect, so we might rely on it or the listener.
+                // Since initAuthGuard is running, it will eventually redirect if user is detected.
+            } catch (error) {
+                console.error(error);
+                let msg = error.message;
+                if (error.code === 'auth/popup-closed-by-user') msg = "Sign up cancelled.";
+                else if (error.code) msg = error.message.replace('Firebase: ', '');
+
+                errorEl.innerText = msg;
+                errorEl.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+
+</html>

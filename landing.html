@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>ArchiCalc | Precision Architectural Tools</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#1A1A1A",
+                        accent: "#6366f1",
+                        "background-light": "#F8FAFC",
+                        "background-dark": "#0F172A",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.75rem",
+                        'xl': '1.25rem',
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .bg-grid {
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .dark .bg-grid {
+            background-image: radial-gradient(#334155 1px, transparent 1px);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 transition-colors duration-300">
+    <nav class="fixed top-0 w-full z-50 glass-card border-b border-slate-200 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center gap-2">
+                    <div class="p-2 bg-primary rounded-lg">
+                        <span class="material-icons-outlined text-white">architecture</span>
+                    </div>
+                    <span
+                        class="text-xl font-bold tracking-tight text-primary dark:text-white uppercase">ArchiCalc</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a class="text-sm font-medium hover:text-accent transition-colors" href="#features">Features</a>
+                    <a class="text-sm font-medium hover:text-accent transition-colors" href="#how-it-works">Workflow</a>
+                    <a class="text-sm font-medium hover:text-accent transition-colors" href="#pricing">Pricing</a>
+                    <button class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                        onclick="toggleDarkMode()">
+                        <span class="material-icons-outlined text-xl" id="theme-icon">dark_mode</span>
+                    </button>
+                    <a class="bg-primary text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-opacity-90 transition-all"
+                        href="login.html" id="nav-login-btn">Log in</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Firebase Compat Libraries -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+    <!-- App Scripts -->
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initAuthGuard(false);
+        });
+    </script>
+    <main class="relative pt-32 pb-20 overflow-hidden bg-grid">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <div class="text-center max-w-4xl mx-auto">
+                <div
+                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-semibold mb-6 border border-slate-200 dark:border-slate-700">
+                    <span class="flex h-2 w-2 rounded-full bg-accent"></span>
+                    PRO VERSION 1.0 NOW AVAILABLE
+                </div>
+                <h1
+                    class="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-8 leading-tight">
+                    The Blueprint for <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-slate-500 dark:from-white dark:to-slate-400">Precision
+                        Calculations.</span>
+                </h1>
+                <p class="text-xl text-slate-600 dark:text-slate-400 mb-10 max-w-2xl mx-auto leading-relaxed">
+                    ArchiCalc simplifies complex architectural math into an intuitive workspace. From slope percentages
+                    to complex stair riser checks, we handle the math so you can focus on the design.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a class="w-full sm:w-auto px-8 py-4 bg-primary text-white rounded-xl font-bold text-lg hover:shadow-2xl hover:shadow-primary/20 transition-all flex items-center justify-center gap-2"
+                        href="login.html" id="hero-cta-btn">
+                        Get started <span class="material-icons-outlined">arrow_forward</span>
+                    </a>
+                    <a class="w-full sm:w-auto px-8 py-4 glass-card rounded-xl font-bold text-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex items-center justify-center gap-2"
+                        href="#how-it-works">
+                        View Demo
+                    </a>
+                </div>
+            </div>
+            <div class="mt-20 relative">
+                <div
+                    class="absolute inset-0 bg-gradient-to-t from-background-light dark:from-background-dark via-transparent to-transparent z-10">
+                </div>
+                <div
+                    class="rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden bg-white dark:bg-slate-900">
+                    <img alt="Architectural drawing and workspace"
+                        class="w-full h-[600px] object-cover opacity-90 grayscale hover:grayscale-0 transition-all duration-700"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0GGtRAiZSJFov8OsCFPOREzpO9z-euCL3CMtc-oDSZ-C3ZsscOC1wEHve2SVzdEbCAK_285qw0VpIPmlpoB-39Tj3zfu9IDq25f7kpeUe6A3PbxSkYPC6wtGCmGG9wvLpLnshRmu7VFMFV9OM2tGQ1PUJNpPkLudVhus2R8TY0xZ_RPlG2BiJUoT9x9Wkr57ytWT6DQpRoiI9_PLs7MUFdDf2uocFKs5ScISarcyeWlI9row44Uw1ovArzMIzg0ChjNyy1FqWBOo" />
+                    <div class="absolute top-10 right-10 w-72 glass-card p-6 rounded-xl shadow-xl hidden lg:block z-20">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="p-2 bg-slate-100 dark:bg-slate-800 rounded">
+                                <span
+                                    class="material-icons-outlined text-slate-600 dark:text-slate-300">trending_up</span>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold">Slope % Calc</h4>
+                                <p class="text-xs text-slate-500">Ramp &amp; Roof Incline</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="h-2 w-full bg-slate-200 dark:bg-slate-700 rounded-full"></div>
+                            <div class="h-2 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <section class="py-24 bg-white dark:bg-slate-900/50" id="features">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+                <div class="max-w-2xl">
+                    <h2 class="text-sm font-bold tracking-widest text-accent uppercase mb-4">Toolkit</h2>
+                    <h3 class="text-4xl font-bold text-slate-900 dark:text-white">Every tool an architect needs, unified
+                        in one platform.</h3>
+                </div>
+                <p class="text-slate-600 dark:text-slate-400 max-w-sm">
+                    No more switching between spreadsheets and manual formulas. ArchiCalc brings all essential
+                    architectural math tools under one roof.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div
+                    class="group p-8 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-accent/30 dark:hover:border-accent/30 hover:shadow-xl transition-all duration-300">
+                    <div
+                        class="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center mb-6 group-hover:bg-accent group-hover:text-white transition-colors">
+                        <span class="material-icons-outlined">square_foot</span>
+                    </div>
+                    <h4 class="text-xl font-bold mb-3">Area &amp; Perimeter</h4>
+                    <p class="text-slate-600 dark:text-slate-400">Calculate net and gross areas for complex geometries
+                        including rectangles, circles, and irregular polygons.</p>
+                </div>
+                <div
+                    class="group p-8 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-accent/30 dark:hover:border-accent/30 hover:shadow-xl transition-all duration-300">
+                    <div
+                        class="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center mb-6 group-hover:bg-accent group-hover:text-white transition-colors">
+                        <span class="material-icons-outlined">view_in_ar</span>
+                    </div>
+                    <h4 class="text-xl font-bold mb-3">Volume Analytics</h4>
+                    <p class="text-slate-600 dark:text-slate-400">Estimate excavation volumes, concrete requirements,
+                        and spatial capacity with cube and cylinder modules.</p>
+                </div>
+                <div
+                    class="group p-8 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-accent/30 dark:hover:border-accent/30 hover:shadow-xl transition-all duration-300">
+                    <div
+                        class="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center mb-6 group-hover:bg-accent group-hover:text-white transition-colors">
+                        <span class="material-icons-outlined">staircase</span>
+                    </div>
+                    <h4 class="text-xl font-bold mb-3">Stair Calculator</h4>
+                    <p class="text-slate-600 dark:text-slate-400">Check riser and tread compliance with building codes
+                        instantly. Automated calculations for pitch and run.</p>
+                </div>
+                <div
+                    class="group p-8 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-accent/30 dark:hover:border-accent/30 hover:shadow-xl transition-all duration-300">
+                    <div
+                        class="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center mb-6 group-hover:bg-accent group-hover:text-white transition-colors">
+                        <span class="material-icons-outlined">straighten</span>
+                    </div>
+                    <h4 class="text-xl font-bold mb-3">Elevation &amp; Levels</h4>
+                    <p class="text-slate-600 dark:text-slate-400">Determine floor-to-floor heights, finish level
+                        differences, and critical structural clearances effortlessly.</p>
+                </div>
+                <div
+                    class="group p-8 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-accent/30 dark:hover:border-accent/30 hover:shadow-xl transition-all duration-300">
+                    <div
+                        class="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center mb-6 group-hover:bg-accent group-hover:text-white transition-colors">
+                        <span class="material-icons-outlined">trending_up</span>
+                    </div>
+                    <h4 class="text-xl font-bold mb-3">Slope Percentages</h4>
+                    <p class="text-slate-600 dark:text-slate-400">Calculate ramp inclines, roof pitches, and site
+                        topography grades in percentage or ratio formats.</p>
+                </div>
+                <div
+                    class="group p-8 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-accent/30 dark:hover:border-accent/30 hover:shadow-xl transition-all duration-300">
+                    <div
+                        class="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center mb-6 group-hover:bg-accent group-hover:text-white transition-colors">
+                        <span class="material-icons-outlined">history</span>
+                    </div>
+                    <h4 class="text-xl font-bold mb-3">Calculation History</h4>
+                    <p class="text-slate-600 dark:text-slate-400">Never lose a measurement. Your recent calculations are
+                        saved and synced across all your devices.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="py-24" id="how-it-works">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 class="text-4xl font-bold mb-8">Design. Calculate. Refine.</h2>
+                    <div class="space-y-8">
+                        <div class="flex gap-6">
+                            <div
+                                class="flex-shrink-0 w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold">
+                                1</div>
+                            <div>
+                                <h4 class="text-lg font-bold mb-2">Select your Tool</h4>
+                                <p class="text-slate-600 dark:text-slate-400">Choose from our suite of specialized
+                                    architectural calculators tailored for specific tasks.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-6">
+                            <div
+                                class="flex-shrink-0 w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold">
+                                2</div>
+                            <div>
+                                <h4 class="text-lg font-bold mb-2">Input Parameters</h4>
+                                <p class="text-slate-600 dark:text-slate-400">Enter your dimensions. Our interface
+                                    supports multiple unit formats and provides real-time feedback.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-6">
+                            <div
+                                class="flex-shrink-0 w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold">
+                                3</div>
+                            <div>
+                                <h4 class="text-lg font-bold mb-2">Export &amp; Apply</h4>
+                                <p class="text-slate-600 dark:text-slate-400">Get instant results that you can copy to
+                                    your CAD software or export as a PDF calculation report.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="aspect-square bg-slate-200 dark:bg-slate-800 rounded-3xl overflow-hidden shadow-2xl">
+                        <img alt="Drafting process" class="w-full h-full object-cover opacity-80"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEKPCMVAGdDbNr-ey-YcaV1Zlew4HHfhTR147UUZqkyfy0Mg4wFz8WaC66UntD8WA_wNwpjox8LcMKLW_8MQUNOSWi9hcP7yGWjTkDl1CF0WA8tEb8ci4wIw0jFtMwRiZHTV6Vb8UtIN-ODPQ3_sZx8L_L5cDg5PD1sQ1TX-ZKryovaBIWBsquT65qzOUOJT6Zb5QUSmGmpNngLxtYQjLOHBSdEELIwmx2-Uxc8mY0NaZPdphTZ7F6jPITSmJsOEABDmrBdD5uqh0" />
+                    </div>
+                    <div class="absolute -bottom-6 -left-6 glass-card p-6 rounded-2xl shadow-xl">
+                        <p class="text-accent text-3xl font-bold mb-1">99.9%</p>
+                        <p class="text-sm font-semibold">Precision Accuracy</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="py-24">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-primary rounded-[2.5rem] p-12 md:p-20 text-center text-white relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-accent/20 rounded-full blur-3xl -mr-32 -mt-32"></div>
+                <div class="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -ml-32 -mb-32"></div>
+                <h2 class="text-4xl md:text-5xl font-bold mb-8 relative z-10">Ready to streamline your workflow?</h2>
+                <p class="text-slate-400 text-lg mb-10 max-w-xl mx-auto relative z-10">
+                    Join thousands of architects worldwide who use ArchiCalc to eliminate errors and speed up their
+                    design process.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center relative z-10">
+                    <a class="px-10 py-4 bg-white text-primary font-bold rounded-xl hover:bg-slate-100 transition-all"
+                        href="#">Create Free Account</a>
+                    <a class="px-10 py-4 border border-white/20 text-white font-bold rounded-xl hover:bg-white/10 transition-all"
+                        href="#">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 pt-20 pb-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center gap-2 mb-6">
+                        <div class="p-2 bg-primary rounded-lg">
+                            <span class="material-icons-outlined text-white">architecture</span>
+                        </div>
+                        <span
+                            class="text-xl font-bold tracking-tight text-primary dark:text-white uppercase">ArchiCalc</span>
+                    </div>
+                    <p class="text-slate-600 dark:text-slate-400 max-w-xs mb-8">
+                        The ultimate precision toolkit for modern architects and designers. Engineered for accuracy and
+                        speed.
+                    </p>
+                    <div class="flex gap-4">
+                        <a class="text-slate-400 hover:text-primary transition-colors" href="#"><span
+                                class="material-icons-outlined">facebook</span></a>
+                        <a class="text-slate-400 hover:text-primary transition-colors" href="#"><span
+                                class="material-icons-outlined">public</span></a>
+                        <a class="text-slate-400 hover:text-primary transition-colors" href="#"><span
+                                class="material-icons-outlined">email</span></a>
+                    </div>
+                </div>
+                <div>
+                    <h5 class="font-bold mb-6">Product</h5>
+                    <ul class="space-y-4 text-slate-600 dark:text-slate-400">
+                        <li><a class="hover:text-primary transition-colors" href="#">Calculators</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#">Documentation</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#">API Access</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#">Changelog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold mb-6">Legal</h5>
+                    <ul class="space-y-4 text-slate-600 dark:text-slate-400">
+                        <li><a class="hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#">Terms of Service</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div
+                class="border-t border-slate-200 dark:border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-sm text-slate-500">© 2026 ArchiCalc. All rights reserved.</p>
+                <div class="flex items-center gap-2">
+                    <span class="h-2 w-2 rounded-full bg-green-500"></span>
+                    <span class="text-xs font-medium text-slate-500 uppercase tracking-widest">Systems
+                        Operational</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script>
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.textContent = 'dark_mode';
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.add('dark');
+                icon.textContent = 'light_mode';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+        // Check for saved theme preference
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            document.getElementById('theme-icon').textContent = 'light_mode';
+        } else {
+            document.documentElement.classList.remove('dark');
+            document.getElementById('theme-icon').textContent = 'dark_mode';
+        }
+    </script>
+
+</body>
+
+</html>
