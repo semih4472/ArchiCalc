@@ -827,13 +827,6 @@
                         <p style="color:var(--text-muted); font-size:13px; margin-top:4px;">Upload a plan (Image) to
                             generate a material list.</p>
                     </div>
-                    <div style="text-align:right;">
-                        <input type="password" id="gemini-api-key" placeholder="Enter Gemini API Key" class="inp-field"
-                            style="padding:8px; font-size:12px; width:200px;">
-                        <button onclick="saveApiKey()"
-                            style="padding:8px 12px; background:var(--accent-black); color:white; border:none; border-radius:6px; cursor:pointer;">Save
-                            Key</button>
-                    </div>
                 </div>
 
                 <!-- Upload Area -->
@@ -1396,21 +1389,9 @@
         let currentFileBase64 = null;
         let aiResultsData = [];
 
-        // Load API Key on start
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedKey = localStorage.getItem('gemini_api_key');
-            if (savedKey) {
-                document.getElementById('gemini-api-key').value = savedKey;
-            }
-        });
 
-        function saveApiKey() {
-            const key = document.getElementById('gemini-api-key').value;
-            if (key) {
-                localStorage.setItem('gemini_api_key', key);
-                alert('API Key saved safely to your browser!');
-            }
-        }
+
+        // No need to load API Key manually anymore
 
         function handleFileSelect(event) {
             const file = event.target.files[0];
@@ -1431,11 +1412,8 @@
         }
 
         async function analyzePlan() {
-            const apiKey = localStorage.getItem('gemini_api_key');
-            if (!apiKey) {
-                alert("Please enter and save your Gemini API Key first.");
-                return;
-            }
+            const apiKey = "AIzaSyDfE9LU-N3Hmn_eXioJcDdkNJMjthGixRc"; // Hardcoded API Key
+
             if (!currentFileBase64) {
                 alert("Please upload a plan image first.");
                 return;
